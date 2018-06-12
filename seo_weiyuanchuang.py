@@ -32,7 +32,7 @@ def wyc(event):
     text=contents1.GetValue()  #获取contents1里的内容
     if text:
         text1=text+"\n"
-        text_list=re.findall('(.*?)\n+',text1)
+        text_list=re.findall('(.*?)\s+',text1)
         for text in text_list:
             fanyi(text)
 
