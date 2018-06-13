@@ -1,12 +1,23 @@
 #coding:utf8
-#SEO文章伪原创工具 开发者：李亚涛
-import wx,requests,re,hashlib,time,md5,threading
+#SEO文章伪原创工具 开发者：李亚涛 wx:841483350
+import wx,requests,re,hashlib,time,md5
 salt=int(time.time())
-appid=XXX  #这个需要自己到百度申请
-miyao='XXX'  #百度翻译密钥，这个需要自己到百度申请
+appid=20160727000025884
+miyao='tznUzFWt8QzV10DzUtTc'  #百度翻译密钥
+
+def md5(str):
+    import hashlib,time
+    import types
+    if type(str) is types.StringType:
+        m = hashlib.md5()
+        m.update(str)
+        return m.hexdigest()
+    else:
+        return ''
 def fanyi(text):
     sign='%s%s%s%s'%(appid,str(text),salt,miyao)
-    sign=md5.md5(sign)  #MD5加密
+    print sign
+    sign=md5(sign)  #MD5加密
     text=str(text)
     print text
     url='http://api.fanyi.baidu.com/api/trans/vip/translate?q=%s&from=auto&to=en&appid=20160727000025884&salt=%s&sign=%s'%(text,salt,sign)
@@ -15,12 +26,12 @@ def fanyi(text):
 
     if text:
         sign='%s%s%s%s'%(appid,str(text),salt,miyao)
-        sign=md5.md5(sign)
+        sign=md5(sign)
         url_fy='http://api.fanyi.baidu.com/api/trans/vip/translate?q=%s&from=auto&to=zh&appid=20160727000025884&salt=%s&sign=%s'%(text,salt,sign)
         html_fy=requests.get(url_fy).content.decode('utf8')
         result=re.findall('"dst":"([\s\S]*?)"}]}',html_fy)[0].decode("unicode-escape")
         if result:
-            contents2.AppendText(result+'\n\n')
+            contents2.AppendText(result+'\n')
             # print result
             # contents2.SetValue(result)   #设置contents里的内容
         else:
@@ -34,6 +45,7 @@ def wyc(event):
         text1=text+"\n"
         text_list=re.findall('(.*?)\s+',text1)
         for text in text_list:
+            text=text.encode('utf8')
             fanyi(text)
 
     else:
